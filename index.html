@@ -13,7 +13,29 @@
     --radius:16px; --shadow:0 12px 28px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+ html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  overflow: hidden; /* 🚫 запрещаем скролл всей страницы */
+}
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto; /* ✅ теперь скроллится только контент */
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 12px 90px;
+}
+
   .app{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
   .appbar{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,rgba(17,17,17,.95),rgba(17,17,17,.7));
     backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.06);padding:12px;display:flex;align-items:center;gap:10px}
@@ -1258,35 +1280,31 @@ rTabs.forEach(rt=>rt.addEventListener('click',()=>{
  };
 
  // Первый рендер
-render();
+ render();
 
-/* ==== Telegram Mini App integration ==== */
-(function initTelegram() {
-  try {
-    if (window.Telegram && Telegram.WebApp) {
-      Telegram.WebApp.ready();
-      Telegram.WebApp.expand();
-      Telegram.WebApp.setHeaderColor("secondary_bg_color");
-      if (Telegram.WebApp.disableVerticalSwipes) {
-        Telegram.WebApp.disableVerticalSwipes();
-      }
-      console.log("[TaxiPro] Telegram WebApp initialized ✅");
-    } else {
-      console.warn("[TaxiPro] Telegram WebApp не обнаружен ⚠️");
-    }
-  } catch (e) {
-    console.error("[TaxiPro] Telegram init error:", e);
-  }
-})();
-
-/* ==== Scroll containment fix ==== */
-document.body.style.overflow = "hidden";
-const content = document.querySelector(".content");
-if (content) {
-  content.style.overflowY = "auto";
-  content.style.height = "100%";
-  content.style.webkitOverflowScrolling = "touch";
-}
+ // ==== Telegram Mini App init (устойчивый вариант) ====
+ (function initTelegram() {
+   try {
+     if (window.Telegram && Telegram.WebApp) {
+       Telegram.WebApp.ready();
+       Telegram.WebApp.expand();
+       if (Telegram.WebApp.disableVerticalSwipes) {
+         Telegram.WebApp.disableVerticalSwipes();
+       }
+       // Совместимость старого/нового API подтверждения закрытия
+       if (Telegram.WebApp.enableClosingConfirmation) {
+         Telegram.WebApp.enableClosingConfirmation();
+       } else {
+         Telegram.WebApp.isClosingConfirmationEnabled = true;
+       }
+       console.log('[TaxiPro] Telegram WebApp initialized');
+     } else {
+       console.warn('[TaxiPro] Telegram WebApp не обнаружен');
+     }
+   } catch (e) {
+     console.error('[TaxiPro] Telegram init error:', e);
+   }
+ })();
 </script>
 </body>
 </html>
