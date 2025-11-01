@@ -13,29 +13,7 @@
     --radius:16px; --shadow:0 12px 28px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
- html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  overflow: hidden; /* 🚫 запрещаем скролл всей страницы */
-}
-
-.app {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.content {
-  flex: 1;
-  overflow-y: auto; /* ✅ теперь скроллится только контент */
-  -webkit-overflow-scrolling: touch;
-  padding: 12px 12px 90px;
-}
-
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
   .app{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
   .appbar{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,rgba(17,17,17,.95),rgba(17,17,17,.7));
     backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.06);padding:12px;display:flex;align-items:center;gap:10px}
