@@ -13,7 +13,9 @@
     --radius:16px; --shadow:0 12px 28px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
-  html, body {
+  html, body .app {
+  min-height: 100vh;
+  height: 100%; {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -1287,17 +1289,27 @@ rangeBtn.onclick = () => {
 // Первый рендер
 render();
 
-/* ==== Telegram Mini App integration ==== */
+/* ==== Telegram Mini App integration FIX ==== */
 (function initTelegram() {
   try {
     if (window.Telegram && Telegram.WebApp) {
-      Telegram.WebApp.ready();
-      Telegram.WebApp.expand();
-      Telegram.WebApp.setHeaderColor("secondary_bg_color");
-      if (Telegram.WebApp.disableVerticalSwipes) {
-        Telegram.WebApp.disableVerticalSwipes();
-      }
-      console.log("[TaxiPro] Telegram WebApp initialized ✅");
+      const tg = Telegram.WebApp;
+      tg.ready();
+      tg.setHeaderColor("secondary_bg_color");
+
+      // Принудительно разворачиваем на весь экран (iOS fix)
+      const expandFull = () => {
+        tg.expand();
+        document.documentElement.style.height = "100vh";
+        document.body.style.height = "100vh";
+        document.querySelector(".app").style.minHeight = "100vh";
+      };
+      expandFull();
+      setTimeout(expandFull, 600); // повторно через 0.6 сек — для iOS Telegram
+
+      tg.disableVerticalSwipes?.();
+      tg.enableClosingConfirmation?.();
+      console.log("[TaxiPro] Telegram WebApp fully expanded ✅");
     } else {
       console.warn("[TaxiPro] Telegram WebApp не обнаружен ⚠️");
     }
@@ -1306,8 +1318,8 @@ render();
   }
 })();
 
+
 /* ==== Scroll containment fix ==== */
-document.body.style.overflow = "hidden";
 const content = document.querySelector(".content");
 if (content) {
   content.style.overflowY = "auto";
@@ -1317,6 +1329,7 @@ if (content) {
 </script>
 </body>
 </html>
+
 
 
 
