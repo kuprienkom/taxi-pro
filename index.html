@@ -412,14 +412,6 @@
 </div>
 
 <script>
-  // Инициализация Telegram Mini App
-if (window.Telegram && Telegram.WebApp) {
-  Telegram.WebApp.ready();
-  Telegram.WebApp.expand(); // Разворачиваем на всю высоту
-  Telegram.WebApp.disableVerticalSwipes(); // блокирует сворачивание при свайпе вниз
-  Telegram.WebApp.isClosingConfirmationEnabled = true; // спрашивает перед закрытием
-}
-
 /* ========= Утилиты ========= */
 const fmt = (n) => (Math.round(n)).toLocaleString('ru-RU');
 const rub = (n) => `${fmt(n)} ₽`;
@@ -1281,18 +1273,17 @@ render();
 <script>
 // ==== Telegram Mini App fix ====
 if (window.Telegram && Telegram.WebApp) {
-  Telegram.WebApp.ready();                 // Говорим Telegram, что апка загружена
-  Telegram.WebApp.expand();                // Разворачиваем на весь экран
+  Telegram.WebApp.ready();                 // Telegram сообщает, что Mini App готова
+  Telegram.WebApp.expand();                // Разворачиваем во весь экран
   if (Telegram.WebApp.disableVerticalSwipes) {
-    Telegram.WebApp.disableVerticalSwipes(); // Блокируем случайные свайпы вниз
+    Telegram.WebApp.disableVerticalSwipes(); // Блокируем свайп вниз
   }
-  Telegram.WebApp.isClosingConfirmationEnabled = true; // Требовать подтверждение закрытия
 }
 // ==== end fix ====
 </script>
-
 </body>
 </html>
+
 
 
 
