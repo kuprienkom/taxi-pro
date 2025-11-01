@@ -1236,43 +1236,58 @@ rTabs.forEach(rt=>rt.addEventListener('click',()=>{
 }));
 
 /* ========= First render ========= */
-// ===== Отчёт по диапазону =====
-const fromDate=document.getElementById('fromDate');
-const toDate=document.getElementById('toDate');
-const rangeBtn=document.getElementById('rangeBtn');
+ // ===== Отчёт по диапазону =====
+ rangeBtn.onclick = () => {
+   const from = fromDate.value, to = toDate.value;
+   if (!from || !to) { alert('Укажите обе даты'); return; }
+   if (from > to) { alert('Дата начала позже даты окончания'); return; }
 
-rangeBtn.onclick=()=>{
-  const from=fromDate.value, to=toDate.value;
-  if(!from||!to){ alert('Укажите обе даты'); return; }
-  if(from>to){ alert('Дата начала позже даты окончания'); return; }
+   const arr = []; let cur = new Date(from); const end = new Date(to);
+   while (cur <= end) { arr.push(cur.toLocaleDateString('en-CA')); cur.setDate(cur.getDate() + 1); }
 
-  // строим массив дат между from и to
-  const arr=[];
-  let cur=new Date(from);
-  const end=new Date(to);
-  while(cur<=end){
-    arr.push(cur.toLocaleDateString('en-CA'));
-    cur.setDate(cur.getDate()+1);
-  }
+   const s = sumRange(arr);
+   const gross = s.income + s.tips + s.otherIncome;
+   const profit = gross - (s.rent + s.fuel + s.otherExpense + s.fines + s.commission + s.tax);
 
-  const s=sumRange(arr);
-  const gross=s.income+s.tips+s.otherIncome;
-  const profit=gross-(s.rent+s.fuel+s.otherExpense+s.fines+s.commission+s.tax);
-  const eff=gross>0?Math.round((profit/gross)*100):0;
-  const perHour=(s.hours||0)>0?profit/s.hours:0;
+   reportsBody.innerHTML = `
+     <div style="margin-bottom:10px;font-size:13px;color:var(--muted);text-align:center;">
+       📅 Период: ${isoToShort(from)} — ${isoToShort(to)}
+     </div>
+     ${buildSummaryCard('Отчёт по диапазону', s)}
+   `;
+ };
 
-  reportsBody.innerHTML=`
-    <div style="margin-bottom:10px;font-size:13px;color:var(--muted);text-align:center;">
-      📅 Период: ${isoToShort(from)} — ${isoToShort(to)}
-    </div>
-    ${buildSummaryCard('Отчёт по диапазону', s)}
-  `;
-};
+ // Первый рендер
+ render();
 
-render();
+ // ==== Telegram Mini App init (устойчивый вариант) ====
+ (function initTelegram() {
+   try {
+     if (window.Telegram && Telegram.WebApp) {
+       Telegram.WebApp.ready();
+       Telegram.WebApp.expand();
+       if (Telegram.WebApp.disableVerticalSwipes) {
+         Telegram.WebApp.disableVerticalSwipes();
+       }
+       // Совместимость старого/нового API подтверждения закрытия
+       if (Telegram.WebApp.enableClosingConfirmation) {
+         Telegram.WebApp.enableClosingConfirmation();
+       } else {
+         Telegram.WebApp.isClosingConfirmationEnabled = true;
+       }
+       console.log('[TaxiPro] Telegram WebApp initialized');
+     } else {
+       console.warn('[TaxiPro] Telegram WebApp не обнаружен');
+     }
+   } catch (e) {
+     console.error('[TaxiPro] Telegram init error:', e);
+   }
+ })();
 </script>
 </body>
 </html>
+
+
 
 
 
