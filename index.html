@@ -412,6 +412,19 @@
 </div>
 
 <script>
+// ==== Telegram Mini App fix ====
+if (window.Telegram && Telegram.WebApp) {
+  Telegram.WebApp.ready();                 // Говорим Telegram, что апка загружена
+  Telegram.WebApp.expand();                // Разворачиваем на весь экран
+  if (Telegram.WebApp.disableVerticalSwipes) {
+    Telegram.WebApp.disableVerticalSwipes(); // Блокируем случайные свайпы вниз
+  }
+  Telegram.WebApp.isClosingConfirmationEnabled = true; // Требовать подтверждение закрытия
+}
+// ==== end fix ====
+</script>
+
+
 /* ========= Утилиты ========= */
 const fmt = (n) => (Math.round(n)).toLocaleString('ru-RU');
 const rub = (n) => `${fmt(n)} ₽`;
@@ -1273,4 +1286,5 @@ render();
 </script>
 </body>
 </html>
+
 
