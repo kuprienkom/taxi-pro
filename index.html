@@ -1302,48 +1302,31 @@ rTabs.forEach(rt=>rt.addEventListener('click',()=>{
  render();
 
  // ==== Telegram Mini App init (устойчивый вариант) ====
-(function fixIOSHalfScreen() {
-  // ждем, пока Telegram загрузит WebApp API
-  function tryExpand() {
-    try {
-      if (window.Telegram?.WebApp) {
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
-        Telegram.WebApp.setHeaderColor("secondary_bg_color");
-        Telegram.WebApp.disableVerticalSwipes?.();
-        console.log("[TaxiPro] expand() executed ✅");
-      }
-    } catch(e){ console.warn("Expand fail", e); }
-  }
-  setTimeout(tryExpand, 300);
-  setTimeout(tryExpand, 800); // второй вызов на всякий случай
-
-  // --- детектор полэкрана (только iPhone Safari WebView)
-  const isHalfScreen = window.innerHeight < 600 && /iPhone|iPad/i.test(navigator.userAgent);
-
-  if (isHalfScreen) {
-    const botUsername = "taxi_profit_bot"; // 👈 замени на свой username
-    const startParam = "main"; // можешь менять, если используешь startapp
-    const tgLink = `https://t.me/${botUsername}/app?startapp=${startParam}`;
-    console.log("[TaxiPro] half-screen detected, redirecting →", tgLink);
-
-    // плавный редирект, чтобы Telegram не ругался
-    setTimeout(() => { window.location.replace(tgLink); }, 500);
-  }
-
-  // фикс Safe-Area, чтобы меню не уползало вниз
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-  window.addEventListener('resize', () => {
-    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-  });
-})();
+ (function initTelegram() {
+   try {
+     if (window.Telegram && Telegram.WebApp) {
+       Telegram.WebApp.ready();
+       Telegram.WebApp.expand();
+       if (Telegram.WebApp.disableVerticalSwipes) {
+         Telegram.WebApp.disableVerticalSwipes();
+       }
+       // Совместимость старого/нового API подтверждения закрытия
+       if (Telegram.WebApp.enableClosingConfirmation) {
+         Telegram.WebApp.enableClosingConfirmation();
+       } else {
+         Telegram.WebApp.isClosingConfirmationEnabled = true;
+       }
+       console.log('[TaxiPro] Telegram WebApp initialized');
+     } else {
+       console.warn('[TaxiPro] Telegram WebApp не обнаружен');
+     }
+   } catch (e) {
+     console.error('[TaxiPro] Telegram init error:', e);
+   }
+ })();
 </script>
 </body>
 </html>
-
-
-
 
 
 
