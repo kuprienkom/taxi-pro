@@ -7,11 +7,11 @@
 <link rel="manifest" href="manifest.json">
 
 <style>
-  :root{
+  :root {
     --bg:#111111; --panel:#1c1c1e; --panel2:#262628; --text:#ffffff; --muted:#a9a9ad;
     --accent:#FFD54F; --accent2:#FFEC9A; --ok:#78e08f; --warn:#ffd369; --bad:#ff7675;
     --radius:16px; --shadow:0 12px 28px rgba(0,0,0,.35);
-    --app-height: 100vh;
+    --app-height: 100vh; /* ← динамическая высота */
   }
   *{box-sizing:border-box}
   html, body {
@@ -74,6 +74,7 @@
     <h1 style="text-align:center;margin-top:40px;">🚕 Такси Анализатор</h1>
     <p style="text-align:center;color:var(--muted)">Контент приложения</p>
   </div>
+
   <div class="nav">
     <div class="navbtn active">🏠 Главная</div>
     <div class="navbtn">📊 Отчёты</div>
@@ -82,15 +83,7 @@
 </div>
 
 <script>
-/* ====== Fix динамической высоты (iOS / Android / Telegram Mini App) ====== */
-function setAppHeight() {
-  document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
-}
-window.addEventListener('resize', setAppHeight);
-window.addEventListener('orientationchange', setAppHeight);
-setAppHeight();
-
-/* ====== Telegram WebApp интеграция ====== */
+/* ==== 1. Telegram WebApp integration ==== */
 (function initTelegram() {
   try {
     if (window.Telegram && Telegram.WebApp) {
@@ -108,6 +101,23 @@ setAppHeight();
     console.error("[TaxiPro] Telegram init error:", e);
   }
 })();
+
+/* ==== 2. Dynamic height fix for iOS/Android ==== */
+function setAppHeight() {
+  document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
+}
+window.addEventListener('resize', setAppHeight);
+window.addEventListener('orientationchange', setAppHeight);
+setAppHeight();
+
+/* ==== 3. Scroll fix ==== */
+document.body.style.overflow = "hidden";
+const content = document.querySelector(".content");
+if (content) {
+  content.style.overflowY = "auto";
+  content.style.height = "100%";
+  content.style.webkitOverflowScrolling = "touch";
+}
 </script>
 </body>
 </html>
