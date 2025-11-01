@@ -1236,24 +1236,15 @@ rTabs.forEach(rt=>rt.addEventListener('click',()=>{
 }));
 
 /* ========= First render ========= */
-// ===== Отчёт по диапазону =====
-const fromDate=document.getElementById('fromDate');
-const toDate=document.getElementById('toDate');
-const rangeBtn=document.getElementById('rangeBtn');
-
+<!-- ===== Отчёт по диапазону ===== -->
+<script>
 rangeBtn.onclick=()=>{
   const from=fromDate.value, to=toDate.value;
   if(!from||!to){ alert('Укажите обе даты'); return; }
   if(from>to){ alert('Дата начала позже даты окончания'); return; }
 
-  // строим массив дат между from и to
-  const arr=[];
-  let cur=new Date(from);
-  const end=new Date(to);
-  while(cur<=end){
-    arr.push(cur.toLocaleDateString('en-CA'));
-    cur.setDate(cur.getDate()+1);
-  }
+  const arr=[]; let cur=new Date(from); const end=new Date(to);
+  while(cur<=end){ arr.push(cur.toLocaleDateString('en-CA')); cur.setDate(cur.getDate()+1); }
 
   const s=sumRange(arr);
   const gross=s.income+s.tips+s.otherIncome;
@@ -1270,19 +1261,21 @@ rangeBtn.onclick=()=>{
 };
 
 render();
-<script>
-// ==== Telegram Mini App fix ====
+
+/* ==== Telegram Mini App fix ==== */
 if (window.Telegram && Telegram.WebApp) {
-  Telegram.WebApp.ready();                 // Telegram сообщает, что Mini App готова
-  Telegram.WebApp.expand();                // Разворачиваем во весь экран
+  Telegram.WebApp.ready();      // Telegram сообщает, что Mini App готова
+  Telegram.WebApp.expand();     // Разворачиваем во весь экран
   if (Telegram.WebApp.disableVerticalSwipes) {
     Telegram.WebApp.disableVerticalSwipes(); // Блокируем свайп вниз
   }
 }
-// ==== end fix ====
+/* ==== end fix ==== */
 </script>
 </body>
 </html>
+
+
 
 
 
