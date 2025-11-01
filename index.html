@@ -13,7 +13,48 @@
     --radius:16px; --shadow:0 12px 28px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+ html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  overflow: hidden; /* 🚫 запрещаем скролл всей страницы */
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* ✅ гарантируем, что меню не обрежется */
+  height: 100%;
+  position: relative;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto; /* ✅ скроллится только контент */
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 12px calc(90px + env(safe-area-inset-bottom)); /* 🧩 добавляем место под меню */
+  box-sizing: border-box;
+}
+
+.nav {
+  position: fixed; /* ✅ фиксируем панель внизу всегда */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(17,17,17,1), rgba(17,17,17,.85));
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(255,255,255,.06);
+  display: flex;
+  gap: 6px;
+  padding: 8px calc(env(safe-area-inset-left) + 4px)
+           calc(env(safe-area-inset-bottom) + 8px)
+           calc(env(safe-area-inset-right) + 4px);
+  z-index: 20; /* поверх контента */
+}
+
   .app{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
   .appbar{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,rgba(17,17,17,.95),rgba(17,17,17,.7));
     backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.06);padding:12px;display:flex;align-items:center;gap:10px}
@@ -1286,6 +1327,7 @@ rTabs.forEach(rt=>rt.addEventListener('click',()=>{
 </script>
 </body>
 </html>
+
 
 
 
